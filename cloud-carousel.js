@@ -208,6 +208,9 @@
 		{	
 			this.frontIndex -= direction;
 			this.frontIndex %= items.length;					 			
+			if ( this.frontIndex < 0 )
+				this.frontIndex = items.length + this.frontIndex;
+
 			this.destRotation += ( Math.PI / items.length ) * ( 2*direction );
 			this.showFrontText();
 			this.go();			
