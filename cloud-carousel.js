@@ -180,6 +180,14 @@
 		container.onselectstart = function () { return false; };		// For IE.
 
 		this.innerWrapper = $(container).wrapInner('<div style="position:absolute;width:100%;height:100%;"/>').children()[0];
+
+		// Set images not in the front to a lower opacity
+		this.highlightFrontImage = function()
+		{
+			if ( images[this.frontIndex] === undefined ) return;
+			$(images[this.frontIndex]).css('opacity', 1);
+			images.not(':eq(' + this.frontIndex + ')').css('opacity', 0.5);
+		}
 	
 		// Shows the text from the front most item.
 		this.showFrontText = function()
@@ -212,6 +220,7 @@
 				this.frontIndex = items.length + this.frontIndex;
 
 			this.destRotation += ( Math.PI / items.length ) * ( 2*direction );
+			if ( options.highlightFrontImage ) this.highlightFrontImage();
 			this.showFrontText();
 			this.go();			
 		};
@@ -321,6 +330,8 @@
 			}
 			// If all images have valid widths and heights, we can stop checking.			
 			clearInterval(this.tt);
+
+			if ( options.highlightFrontImage ) this.highlightFrontImage();
 			this.showFrontText();
 			this.autoRotate();	
 			this.updateAll();
@@ -351,7 +362,8 @@
 							   autoRotateDelay: 1500,
 							   speed:0.2,
 							   mouseWheel: false,
-								 bringToFront: false
+							   bringToFront: false,
+							   highlightFrontImage: false
 			},options );									
 			// Create a Controller for each carousel.		
 			$(this).data('cloudcarousel', new Controller( this, $('.cloudcarousel',$(this)), options) );
